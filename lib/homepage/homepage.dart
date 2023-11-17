@@ -1,6 +1,13 @@
+// HomePage.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'blynk_api.dart'; // Import the BlynkApi class
+import 'Lampu1.dart';
+import 'Lampu2.dart';
+import 'Lampu3.dart';
+import 'Suhu.dart';
+import 'Kelembaban.dart';
+import 'Cahaya.dart';
 
 class HomePage extends StatelessWidget {
   final List<String> containerNames = [
@@ -9,7 +16,7 @@ class HomePage extends StatelessWidget {
     'Lampu 3',
     'Kelembaban',
     'Suhu',
-    'Intensitas Cahaya',
+    'Cahaya',
   ];
 
   final List<String> partNames = [
@@ -47,21 +54,21 @@ class HomePage extends StatelessWidget {
                             Text(
                               'Selamat Datang',
                               style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 24.0,
-                                  color:
-                                      Color.fromARGB(0xFF, 0x22, 0x25, 0x38)),
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24.0,
+                                color: Color.fromARGB(0xFF, 0x22, 0x25, 0x38),
+                              ),
                             ),
                             Text(
                               'mirai.world Smart IoT',
                               style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  height: 0.8,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16.0,
-                                  color:
-                                      Color.fromARGB(0xFF, 0x22, 0x25, 0x38)),
+                                fontFamily: 'Poppins',
+                                height: 0.8,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0,
+                                color: Color.fromARGB(0xFF, 0x22, 0x25, 0x38),
+                              ),
                             ),
                           ],
                         ),
@@ -126,7 +133,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Image.asset(
-                  'assets/suhu.png',
+                  'assets/suhu2.png',
                   width: 62.0,
                   height: 62.0,
                 ),
@@ -193,6 +200,7 @@ class _ContainerGridState extends State<ContainerGrid> {
         return GestureDetector(
           onTap: () {
             print('${widget.containerNames[index]} diklik!');
+            navigateToContainerPage(context, index);
           },
           child: Container(
             margin: EdgeInsets.all(8.0),
@@ -207,9 +215,9 @@ class _ContainerGridState extends State<ContainerGrid> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      if (index < 3)
+                  if (index < 3)
+                    Row(
+                      children: [
                         Image.asset(
                           switchValues[index]
                               ? 'assets/light-on.png'
@@ -217,8 +225,7 @@ class _ContainerGridState extends State<ContainerGrid> {
                           width: 50.0,
                           height: 50.0,
                         ),
-                      SizedBox(width: 30.0),
-                      if (index < 3)
+                        SizedBox(width: 30.0),
                         CupertinoSwitch(
                           activeColor: const Color.fromARGB(255, 34, 37, 56),
                           thumbColor: const Color.fromARGB(255, 255, 255, 255),
@@ -230,11 +237,18 @@ class _ContainerGridState extends State<ContainerGrid> {
                             });
                             int ledVirtualPin =
                                 index == 0 ? 1 : (index == 1 ? 5 : 6);
-                            BlynkApi.toggleLed(value, ledVirtualPin);
+                            // BlynkApi.toggleLed(value, ledVirtualPin);
                           },
                         ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  if (index >= 3)
+                    Image.asset(
+                      'assets/${widget.containerNames[index].toLowerCase()}.png',
+                      width: 50.0,
+                      height: 50.0,
+                    ),
+                  SizedBox(height: 10.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -271,5 +285,48 @@ class _ContainerGridState extends State<ContainerGrid> {
         );
       }),
     );
+  }
+
+  void navigateToContainerPage(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Lampu1Page()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Lampu2Page()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Lampu3Page()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => KelembabanPage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SuhuPage()),
+        );
+        break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CahayaPage()),
+        );
+        break;
+      default:
+        break;
+    }
   }
 }
